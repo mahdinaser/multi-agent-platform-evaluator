@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Experiments and data
+experiments/runs/
+data/source_*/
+*.parquet
+*.npy
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs.txt
+run_log.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Report outputs
+report/*.pdf
+report/*.aux
+report/*.log
+report/*.out
+
+# Ollama models (too large)
+models/
+

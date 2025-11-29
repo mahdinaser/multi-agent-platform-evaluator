@@ -1,0 +1,140 @@
+# Research Experiment Engine Configuration
+# PVLDB Paper - Multi-Agent Multi-Platform Evaluation Framework
+
+experiment:
+  seed: 42
+  num_runs: 10  # Run each configuration 10 times for statistical significance
+  warmup_runs: 3  # Warm-up runs to exclude (not counted in metrics)
+  parallel: false
+  quick_mode: true  # If true, runs only agent-selected platforms (6x faster!)
+  max_data_size: 0  # Limit data size for faster execution (0 = no limit, set to 500000 to skip large datasets)
+  confidence_level: 0.95  # For confidence interval calculation
+  
+data:
+  tabular:
+    sizes: [50000, 500000, 1000000]
+    num_categorical: 5
+    num_numeric: 10
+  
+  logs:
+    num_events: 100000
+    num_users: 1000
+    num_event_types: 20
+  
+  vectors:
+    num_vectors: 10000
+    dimension: 128
+  
+  timeseries:
+    num_samples: 100000
+    frequency: "1min"
+  
+  text:
+    num_documents: 5000
+    avg_length: 50
+
+platforms:
+  - pandas
+  - duckdb
+  - polars  # NEW: Fast DataFrame library
+  - sqlite
+  - faiss
+  - annoy
+  - baseline
+
+agents:
+  - rule_based
+  - bandit  # UCB1
+  - cost_model
+  
+  # LLM agents (different models will be auto-generated if enable_multi_model=true)
+  - llm  # Default LLM (llama2)
+  - llm_mcp  # LLM with MCP tools
+  
+  # Agent frameworks (tool-augmented LLM agents)
+  - langchain  # LangChain - most flexible framework
+  - langgraph  # LangGraph - stateful, reliable agentic pipelines
+  - fastagency  # FastAgency - lightweight, tool-focused, ideal for local dev
+  - autogen  # AutoGen - best for multi-agent local conversations + tools
+  
+  # Multi-model LLM agents (automatically added when enable_multi_model=true)
+  # - llm_qwen3_14b
+  # - llm_deepseek_r1_14b
+  # - llm_llama3_1_70b
+  # - llm_qwen2_5_14b
+  # - llm_mcp_qwen3_14b
+  # - llm_mcp_deepseek_r1_14b
+  # - llm_mcp_llama3_1_70b
+  # - llm_mcp_qwen2_5_14b
+  
+  - hybrid
+  
+  # NEW: Baseline agents
+  - random  # Random selection (performance floor)
+  - oracle  # Optimal selection (performance ceiling, requires post-hoc knowledge)
+  - static_best  # Historical best platform
+  - round_robin  # Fair cycling through platforms
+  
+  # NEW: Advanced learning agents
+  - linucb  # Contextual bandit with features
+  - thompson  # Thompson sampling (Bayesian)
+
+llm_config:
+  use_local: true  # Use local model (true) or API (false)
+  use_ollama: true  # Use Ollama if available (recommended), falls back to transformers, then simple reasoning
+  model_name: "llama3:latest"  # Default model - using llama3 (better than llama2)
+  api_key: null  # Set OPENAI_API_KEY environment variable if using API
+  # Note: If Ollama is not installed, the agent will automatically fall back to simple rule-based reasoning
+  
+  # Multiple LLM models to test (requires enable_multi_model: true)
+  # Testing ALL 11 main models for comprehensive comparison
+  test_models:
+    # Llama family (4 models - evolution comparison)
+    - "llama2:latest"      # 3.8 GB - Original baseline
+    - "llama3:latest"      # 4.7 GB - Improved version
+    - "llama3.1:latest"    # 4.9 GB - NEW! Latest compact (8B)
+    - "llama3.1:70b"       # 42 GB - Best quality, largest
+    
+    # Qwen family (3 models - version comparison)
+    - "qwen3:latest"       # 5.2 GB - Smaller Qwen3
+    - "qwen3:14b"          # 9.3 GB - Full Qwen3
+    - "qwen2.5:14b"        # 9.0 GB - Previous generation
+    
+    # DeepSeek (1 model - code specialist)
+    - "deepseek-r1:14b"    # 9.0 GB - Reasoning optimized
+    
+    # Mistral (1 model - NEW!)
+    - "mistral:latest"     # 4.4 GB - NEW! Mistral AI flagship
+    
+    # Phi (1 model - NEW!)
+    - "phi4:latest"        # 9.1 GB - NEW! Microsoft's Phi-4
+    
+    # Gemma (1 model - NEW!)
+    - "gemma3:latest"      # 3.3 GB - NEW! Google Gemma
+    
+    # Optional: Even MORE models available
+    # - "deepseek-r1:8b"   # 5.2 GB - Smaller, faster variant
+    # - "qwen3-vl:30b"     # 19 GB - Vision-language (multimodal)
+  
+  # Enable multi-model testing (creates separate agent for each model)
+  # When true, framework creates: llm_qwen3_14b, llm_mcp_qwen3_14b, etc.
+  enable_multi_model: true
+
+experiments:
+  - scan
+  - filter
+  - aggregate
+  - join
+  - time_window
+  - vector_knn
+  - text_similarity
+
+metrics:
+  track_latency: true
+  track_memory: true
+  track_cpu: true
+  track_correctness: true
+  track_stability: true
+  track_decision_time: true  # Track agent decision time separately from execution
+  compute_confidence_intervals: true  # Calculate 95% CI for all metrics
+

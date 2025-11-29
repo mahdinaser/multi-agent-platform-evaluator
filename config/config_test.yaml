@@ -1,0 +1,62 @@
+# Research Experiment Engine Configuration - QUICK TEST MODE
+# For testing Ollama LLM integration with minimal experiments
+
+experiment:
+  seed: 42
+  num_runs: 1
+  parallel: false
+  quick_mode: true  # Agent-selected platforms only
+  max_data_size: 50000  # Limit to small datasets only
+  
+data:
+  tabular:
+    sizes: [50000]  # Only smallest size
+    num_categorical: 5
+    num_numeric: 10
+  
+  logs:
+    num_events: 10000  # Much smaller
+    num_users: 100
+    num_event_types: 10
+  
+  vectors:
+    num_vectors: 1000  # Much smaller
+    dimension: 128
+  
+  timeseries:
+    num_samples: 10000  # Much smaller
+    frequency: "1min"
+  
+  text:
+    num_documents: 500  # Much smaller
+    avg_length: 50
+
+platforms:
+  - pandas
+  - baseline
+  # Removed duckdb, sqlite, faiss, annoy for faster testing
+
+agents:
+  - rule_based
+  - llm  # Only LLM agent for testing
+  # Removed bandit, cost_model, hybrid for faster testing
+
+llm_config:
+  use_local: true
+  use_ollama: true
+  model_name: "llama2"
+  api_key: null
+
+experiments:
+  - scan
+  - filter
+  # Only 2 experiment types for quick test
+  # Removed: aggregate, join, time_window, vector_knn, text_similarity
+
+metrics:
+  track_latency: true
+  track_memory: true
+  track_cpu: true
+  track_correctness: true
+  track_stability: true
+
