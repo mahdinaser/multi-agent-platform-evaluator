@@ -113,6 +113,13 @@ class ThompsonAgent:
         logger.debug(f"Thompson updated {platform}: latency={latency:.2f}ms, "
                     f"success={success}, alpha={dist['alpha']:.1f}, beta={dist['beta']:.1f}")
     
+    def get_decision_reasoning(self) -> str:
+        """Get the reasoning for the last decision."""
+        if self.decision_history:
+            last_decision = self.decision_history[-1]
+            return last_decision.get('reasoning', 'No reasoning available')
+        return 'No decisions made yet'
+    
     def get_decision_history(self) -> List[Dict[str, Any]]:
         """Return decision history."""
         return self.decision_history

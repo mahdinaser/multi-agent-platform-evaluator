@@ -60,6 +60,13 @@ class OracleAgent:
         self.performance_cache[cache_key] = latency
         logger.debug(f"Oracle cached: {cache_key} -> {latency:.2f} ms")
     
+    def get_decision_reasoning(self) -> str:
+        """Get the reasoning for the last decision."""
+        if self.decision_history:
+            last_decision = self.decision_history[-1]
+            return last_decision.get('reasoning', 'No reasoning available')
+        return 'No decisions made yet'
+    
     def get_decision_history(self) -> List[Dict[str, Any]]:
         """Return decision history."""
         return self.decision_history

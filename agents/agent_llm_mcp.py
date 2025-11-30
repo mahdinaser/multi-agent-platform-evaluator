@@ -335,6 +335,13 @@ HISTORICAL PERFORMANCE DATA (via MCP tools):
         """Return decision history."""
         return self.decision_history
     
+    def get_decision_reasoning(self) -> str:
+        """Get the reasoning for the last decision."""
+        if self.decision_history:
+            last_decision = self.decision_history[-1]
+            return last_decision.get('reasoning', 'No reasoning available')
+        return 'No decisions made yet'
+    
     def get_mcp_statistics(self) -> Dict[str, Any]:
         """Get statistics about MCP tool usage."""
         total_decisions = len(self.decision_history)

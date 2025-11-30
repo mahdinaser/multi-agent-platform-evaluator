@@ -72,6 +72,13 @@ class StaticBestAgent:
                 logger.info(f"Static-Best determined best platform: {self.best_platform} "
                            f"(avg latency: {avg_latencies[self.best_platform]:.2f} ms)")
     
+    def get_decision_reasoning(self) -> str:
+        """Get the reasoning for the last decision."""
+        if self.decision_history:
+            last_decision = self.decision_history[-1]
+            return last_decision.get('reasoning', 'No reasoning available')
+        return 'No decisions made yet'
+    
     def get_decision_history(self) -> List[Dict[str, Any]]:
         """Return decision history."""
         return self.decision_history
